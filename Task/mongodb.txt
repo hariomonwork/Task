@@ -1,0 +1,41 @@
+from pymongo import MongoClient
+
+# Connect to MongoDB
+client = MongoClient("mongodb://localhost:27017/")
+
+# Access the database and collection
+db = client["mydatabase"]
+collection = db["mycollection"]
+
+# Create
+document = {"name": "Hariom", "age": 23, "city": "Navsari"}
+collection.insert_one(document)
+
+documents = [
+    {"name": "Satyam", "age": 22, "city": "Surat"},
+    {"name": "Gowtham", "age": 25, "city": "Chennai"}
+]
+collection.insert_many(documents)
+
+# for Reading
+result = collection.find_one({"name": "Hariom"})
+print("Read one:", result)
+
+results = collection.find({"city": "Navsari"})
+print("Read multiple:")
+for doc in results:
+    print(doc)
+
+# Update data 
+collection.update_one({"name": "Hariom"}, {"$set": {"age": 24}})
+collection.update_many({"city": "Navsari"}, {"$set": {"city": "Nvs"}})
+
+# Delete one or multiple
+collection.delete_one({"name": "Hariom"})
+collection.delete_many({"city": "Nvs"})
+
+# Verify deletion
+results = collection.find()
+print("After deletion:")
+for doc in results:
+    print(doc)
